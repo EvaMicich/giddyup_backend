@@ -1,1 +1,3 @@
-Make Betty happy
+Make Betty happy and proud
+
+Seahorse pride!
