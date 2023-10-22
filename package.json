@@ -1,0 +1,12 @@
+{
+  "name": "giddyup_backend",
+  "version": "1.0.0",
+  "description": "Make Betty happy and proud",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Bryan Field, Eva Micich",
+  "license": "ISC"
+}
