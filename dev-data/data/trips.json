@@ -1,0 +1,57 @@
+{
+  "trips": [
+    {
+      "id": "1",
+      "driver": {
+        "id": "101",
+        "name": "John Doe",
+        "car": "Toyota Camry",
+        "availableSeats": 2
+      },
+      "departure": "Seddon",
+      "destination": "Workplace A",
+      "pickupLocations": ["Location A", "Location B"],
+      "passengers": [
+        {
+          "id": "201",
+          "name": "Alice Johnson"
+        },
+        {
+          "id": "202",
+          "name": "Bob Smith"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "driver": {
+        "id": "102",
+        "name": "Jane Smith",
+        "car": "Honda Civic",
+        "availableSeats": 3
+      },
+      "departure": "Yarraville",
+      "destination": "Workplace B",
+      "pickupLocations": ["Location C", "Location D"],
+      "passengers": [
+        {
+          "id": "203",
+          "name": "Charlie Brown"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "driver": {
+        "id": "103",
+        "name": "Eva Williams",
+        "car": "Ford Fusion",
+        "availableSeats": 1
+      },
+      "departure": "Footscray",
+      "destination": "Workplace C",
+      "pickupLocations": ["Location E"],
+      "passengers": []
+    }
+  ]
+}
