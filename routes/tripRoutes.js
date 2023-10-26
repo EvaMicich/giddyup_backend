@@ -17,6 +17,8 @@ router
   .get(tripController.getAllTrips)
   .post(tripController.createTrip);
 
+router.route('/search').get(tripController.searchAllTrips);
+
 router
   .route('/:id')
   .get(tripController.getTrip)
