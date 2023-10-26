@@ -36,23 +36,14 @@ exports.getAllTrips = async (req, res) => {
 
 exports.getTrip = async (req, res) => {
   try {
-    const trip = await Trip.findById(req.params.id).populate({
-      path: 'driver', 
-      select: [
-        'firstName',
-        'lastName',
-        'profileImage',
-        'ratingsAverage'
-      ]
-    })
+    const trip = await Trip.findById(req.params.id)
       .populate({
-        path: 'passenger', 
-        select: [
-          'firstName',
-          'lastName',
-          'profileImage',
-          'ratingsAverage'
-        ]
+        path: 'driver',
+        select: ['firstName', 'lastName', 'profileImage', 'ratingsAverage'],
+      })
+      .populate({
+        path: 'passenger',
+        select: ['firstName', 'lastName', 'profileImage', 'ratingsAverage'],
       });
 
     res.status(200).json({
