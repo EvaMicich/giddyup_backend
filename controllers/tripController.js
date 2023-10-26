@@ -8,6 +8,35 @@ exports.aliasTopTrips = (req, res, next) => {
   next();
 };
 
+exports.searchAllTrips = async (req, res) => {
+  try {
+    const { origin, destination, deptDate } = req.body;
+    const deptDateObject = new Date(deptDate);
+
+    // Perform a database query to find trips matching the criteria
+    const trips = await Trip.find({
+      origin,
+      destination,
+      deptDate: deptDateObject,
+    })
+      .sort({ deptTime: 1 })
+      .limit(5);
+
+    res.status(200).json({
+      status: 'success',
+      results: trips.length,
+      data: {
+        trips,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err,
+    });
+  }
+};
+
 exports.getAllTrips = async (req, res) => {
   try {
     // EXECUTE QUERY
