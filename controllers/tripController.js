@@ -8,6 +8,79 @@ exports.aliasTopTrips = (req, res, next) => {
   next();
 };
 
+exports.bookedTrips = async (req, res) => {
+  try {
+    // Retrieve the user's ID from the request (assuming it's available after authentication)
+    //console.log(req.body);
+    const userId = req.body.passenger;
+
+    // Find all trips where the user's ID is the passenger and ride is booked
+    const bookedTrips = await Trip.find({
+      passenger: userId,
+      rideBooked: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      results: bookedTrips.length,
+      data: {
+        trips: bookedTrips,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
+exports.bookingButton = async (req, res) => {
+  try {
+    //console.log(req.params);
+    const tripId = req.params.id;
+    const passengerId = req.body.passenger;
+
+    // Find the trip document by ID
+    const trip = await Trip.findById(tripId);
+
+    if (!trip) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Trip not found',
+      });
+    }
+
+    // Check if the trip is already booked
+    if (trip.rideBooked) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Trip is already booked',
+      });
+    }
+
+    // Update the trip document
+    trip.rideBooked = true;
+    trip.passenger = passengerId;
+
+    // Save the updated trip document
+    await trip.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Trip booked successfully',
+      data: {
+        trip,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
 exports.searchAllTrips = async (req, res) => {
   try {
     const { origin, destination, deptDate } = req.body;

@@ -18,6 +18,8 @@ router
   .post(tripController.createTrip);
 
 router.route('/search').get(tripController.searchAllTrips);
+router.route('/booking-button/:id').patch(tripController.bookingButton);
+router.route('/booked-trips').get(tripController.bookedTrips);
 
 router
   .route('/:id')
