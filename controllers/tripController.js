@@ -112,7 +112,6 @@ exports.searchAllTrips = async (req, res) => {
 
 exports.getAllTrips = async (req, res) => {
   try {
-    // EXECUTE QUERY
     const features = new APIFeatures(Trip.find(), req.query)
       .filter()
       .sort()
@@ -120,7 +119,6 @@ exports.getAllTrips = async (req, res) => {
       .paginate();
     const trips = await features.query;
 
-    // SEND RESPONSE
     res.status(200).json({
       status: 'success',
       results: trips.length,
