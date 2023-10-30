@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
+
 
 const tripRouter = require('./routes/tripRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -11,6 +13,9 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware to accept json on POST requests
 app.use(express.json());
