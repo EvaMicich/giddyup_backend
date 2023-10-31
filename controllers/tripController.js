@@ -83,7 +83,8 @@ exports.bookingButton = async (req, res) => {
 
 exports.searchAllTrips = async (req, res) => {
   try {
-    const { origin, destination, deptDate } = req.body;
+    // console.log(req);
+    const { origin, destination, deptDate } = req.query;
     const deptDateObject = new Date(deptDate);
 
     // Perform a database query to find trips matching the criteria
