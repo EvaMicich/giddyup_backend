@@ -4,21 +4,21 @@ const validator = require('validator');
 const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: [true, 'User must have a first name'],
+    //required: [true, 'User must have a first name'],
     trim: true,
     maxlength: [40, 'User first name must be less than or equal to 40 chars'],
     minlength: [1, 'User first name must be greater than or equal to 1 chars'],
   },
   lastName: {
     type: String,
-    required: [true, 'A user must have a last name'],
+    //required: [true, 'A user must have a last name'],
     trim: true,
     maxlength: [40, 'User last name must be less than or equal to 40 chars'],
     minlength: [1, 'User last name must be greater than or equal to 1 chars'],
   },
   email: {
     type: String,
-    required: [true, 'Please provide your email'],
+    //required: [true, 'Please provide your email'],
     unique: true,
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email'],
@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    required: [true, 'Phone number is required'],
+    //required: [true, 'Phone number is required'],
     unique: true,
     maxlength: [10, 'Phone number must be exactly 10 digits'],
     minlength: [10, 'Phone number must be exactly 10 digits'],
@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
   address: {
     streetAddress: {
       type: String,
-      required: [true, 'Street address is required'],
+      //required: [true, 'Street address is required'],
       minlength: [1, 'Street address must be at least 1 character'],
       maxlength: [40, 'Street address must be at most 40 characters'],
     },
@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
     },
     postcode: {
       type: String,
-      required: [true, 'Postcode is required'],
+      //required: [true, 'Postcode is required'],
       minlength: [1, 'Postcode must be at least 1 character'],
       maxlength: [40, 'Postcode must be at most 40 characters'],
     },

@@ -25,6 +25,45 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.getUserByEmail = async (req, res) => {
+  try {
+    // Get the email from the query
+    console.log(req);
+    const { email } = req.body;
+
+    // Validate the email
+    if (!email) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Email is required',
+      });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email: email });
+
+    // Check if a user with the provided email exists
+    if (!user) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'No user found with that email',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        userId: user._id,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
