@@ -44,7 +44,7 @@ exports.bookingButton = async (req, res) => {
     console.log(passengerId);
 
     // Find the trip document by ID
-    const trip = await Trip.findById(tripId);
+    const trip = await Trip.findByIdAndUpdate(tripId);
 
     if (!trip) {
       return res.status(404).json({
@@ -71,6 +71,52 @@ exports.bookingButton = async (req, res) => {
     res.status(200).json({
       status: 'success',
       message: 'Trip booked successfully',
+      data: {
+        trip,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
+};
+
+exports.cancelTrip = async (req, res) => {
+  try {
+    console.log(req);
+    const tripId = req.body._id;
+    console.log(tripId);
+
+    // Find the trip document by ID
+    const trip = await Trip.findByIdAndUpdate(tripId);
+
+    if (!trip) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Trip not found',
+      });
+    }
+
+    // Check if the trip is NOT already booked
+    if (!trip.rideBooked) {
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Trip is not booked',
+      });
+    }
+
+    // Update the trip document to reflect the cancellation
+    trip.rideBooked = false;
+    trip.passenger = undefined; // This will remove the passenger field
+
+    // Save the updated trip document
+    await trip.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Trip cancelled successfully',
       data: {
         trip,
       },

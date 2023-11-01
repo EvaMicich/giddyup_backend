@@ -20,6 +20,7 @@ router
 router.route('/search').get(tripController.searchAllTrips);
 router.route('/booking-button').patch(tripController.bookingButton);
 router.route('/booked-trips').get(tripController.bookedTrips);
+router.route('/cancel-trip').patch(tripController.cancelTrip);
 
 router
   .route('/:id')
