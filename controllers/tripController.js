@@ -83,7 +83,6 @@ exports.bookingButton = async (req, res) => {
 
 exports.searchAllTrips = async (req, res) => {
   try {
-    // console.log(req);
     const { origin, destination, deptDate } = req.query;
     const deptDateObject = new Date(deptDate);
 
