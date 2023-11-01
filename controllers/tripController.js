@@ -37,9 +37,11 @@ exports.bookedTrips = async (req, res) => {
 
 exports.bookingButton = async (req, res) => {
   try {
-    //console.log(req.params);
-    const tripId = req.params.id;
+    console.log(req);
+    const tripId = req.body._id;
     const passengerId = req.body.passenger;
+    console.log(tripId);
+    console.log(passengerId);
 
     // Find the trip document by ID
     const trip = await Trip.findById(tripId);
