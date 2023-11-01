@@ -11,8 +11,8 @@ exports.aliasTopTrips = (req, res, next) => {
 exports.bookedTrips = async (req, res) => {
   try {
     // Retrieve the user's ID from the request (assuming it's available after authentication)
-    //console.log(req.body);
-    const userId = req.body.passenger;
+    // console.log(req);
+    const userId = req.query.passenger;
 
     // Find all trips where the user's ID is the passenger and ride is booked
     const bookedTrips = await Trip.find({
@@ -95,7 +95,7 @@ exports.cancelTrip = async (req, res) => {
     if (!trip) {
       return res.status(404).json({
         status: 'fail',
-        message: 'Trip not found',
+        message: 'Trip not found or already cancelled',
       });
     }
 
@@ -103,7 +103,7 @@ exports.cancelTrip = async (req, res) => {
     if (!trip.rideBooked) {
       return res.status(400).json({
         status: 'fail',
-        message: 'Trip is not booked',
+        message: 'Trip is not booked, you cant cancel',
       });
     }
 
