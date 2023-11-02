@@ -139,6 +139,7 @@ exports.searchAllTrips = async (req, res) => {
       origin,
       destination,
       deptDate: deptDateObject,
+      rideBooked: false,
     })
       .sort({ deptTime: 1 })
       .limit(5);
