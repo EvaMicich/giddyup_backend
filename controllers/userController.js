@@ -53,7 +53,8 @@ exports.getUserByEmail = async (req, res) => {
     res.status(200).json({
       status: 'success',
       data: {
-        userId: user._id,
+        user,
+        // userId: user._id,
       },
     });
   } catch (err) {
