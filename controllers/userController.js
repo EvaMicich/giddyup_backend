@@ -29,7 +29,7 @@ exports.getUserByEmail = async (req, res) => {
   try {
     // Get the email from the query
     console.log(req);
-    const { email } = req.body;
+    const { email } = req.query;
 
     // Validate the email
     if (!email) {
