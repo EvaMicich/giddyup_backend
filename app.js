@@ -2,7 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-
+const path = require('path');
 
 const tripRouter = require('./routes/tripRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -19,6 +19,9 @@ app.use(cors());
 
 // Middleware to accept json on POST requests
 app.use(express.json());
+
+// Middleware to serve static images
+app.use('/dev-data', express.static(path.join(__dirname, 'dev-data')));
 
 // 2) Routes
 app.use('/api/v1/trips', tripRouter);
