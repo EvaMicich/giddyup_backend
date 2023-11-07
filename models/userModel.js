@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     type: Number,
     min: [18, 'Age must be at least 18 years old'],
     max: [100, 'Age must be less than or equal to 100 years old'],
-    required: [true, 'Age is required'],
+    //required: [true, 'Age is required'],
   },
   statusLevel: {
     type: String,
@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema({
     },
     suburb: {
       type: String,
-      required: [true, 'Suburb is required'],
+      //required: [true, 'Suburb is required'],
       minlength: [1, 'Suburb must be at least 1 character'],
       maxlength: [40, 'Suburb must be at most 40 characters'],
     },
@@ -118,6 +118,20 @@ const userSchema = new mongoose.Schema({
     lastRide: {
       type: Date,
       default: Date.now, // This sets the default value to the current date and time
+    },
+  },
+  userStats: {
+    totalDistanceTravelled: {
+      type: Number,
+      default: 0,
+    },
+    emissionsSaved: {
+      type: Number,
+      default: 0,
+    },
+    dollarsSaved: {
+      type: Number,
+      deafult: 0,
     },
   },
   verified: {
