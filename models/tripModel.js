@@ -9,7 +9,7 @@ const tripSchema = new mongoose.Schema({
     minlength: [2, 'A trip name must have more or equal then 2 characters'],
   },
   rideBooked: {
-    type: Boolean, 
+    type: Boolean,
     default: false,
   },
   origin: {
@@ -28,7 +28,11 @@ const tripSchema = new mongoose.Schema({
   },
   deptDateTime: {
     type: Date,
-    required: [true, 'Trip must have a date and time']
+    required: [true, 'Trip must have a date and time'],
+  },
+  deptDate: {
+    type: Date,
+    required: [true, 'Trip must have a departure date'],
   },
   tripLength: {
     type: Number,
@@ -40,22 +44,16 @@ const tripSchema = new mongoose.Schema({
     type: String,
     required: [false],
   },
-  driver:  {
+  driver: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [true, 'Driver is required'],
-  }, 
-  passenger:  {
+  },
+  passenger: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: [false],
-  }, 
-  
-
-  // }
-
-
-
+  },
 });
 
 const Trip = mongoose.model('Trip', tripSchema);

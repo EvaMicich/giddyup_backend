@@ -144,6 +144,10 @@ const userSchema = new mongoose.Schema({
       default: false, // Set the default value as needed
     },
   },
+  email_verified: {
+    type: Boolean,
+    default: false,
+  }, // Set the default value as needed
   socials: {
     facebook: {
       type: String,
