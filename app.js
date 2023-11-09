@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
 const express = require('express');
 const morgan = require('morgan');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const cors = require('cors');
 const path = require('path');
 
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 const tripRouter = require('./routes/tripRoutes');
 const userRouter = require('./routes/userRoutes');
 
@@ -27,16 +30,12 @@ app.use('/dev-data', express.static(path.join(__dirname, 'dev-data')));
 app.use('/api/v1/trips', tripRouter);
 app.use('/api/v1/users', userRouter);
 
+// Error middleware for handling all undefined routes routes
 app.all('*', (req, res, next) => {
-  res.status(404).json({
-    status: 'fail',
-    message: `Can't find ${req.originalUrl} on this server`,
-  });
+  next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.staus || 'error';
-});
+// Global error handling middleware
+app.use(globalErrorHandler);
 
 module.exports = app;
