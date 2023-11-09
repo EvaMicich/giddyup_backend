@@ -10,6 +10,15 @@ exports.bookedTrips = catchAsync(async (req, res, next) => {
   const bookedTrips = await Trip.find({
     passenger: userId,
     rideBooked: true,
+  }).populate({
+    path: 'driver',
+    select: [
+      'firstName',
+      'lastName',
+      'profileImage',
+      'ratingsAverage',
+      'phoneNumber',
+    ],
   });
 
   res.status(200).json({
@@ -109,6 +118,16 @@ exports.searchAllTrips = catchAsync(async (req, res, next) => {
     deptDate: deptDateObject,
     rideBooked: false,
   })
+    .populate({
+      path: 'driver',
+      select: [
+        'firstName',
+        'lastName',
+        'profileImage',
+        'ratingsAverage',
+        'phoneNumber',
+      ],
+    })
     .sort({ deptTime: 1 })
     .limit(5);
 
