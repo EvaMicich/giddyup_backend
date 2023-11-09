@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Trip = require('../models/tripModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.bookedTrips = catchAsync(async (req, res, next) => {
   const userId = req.query.passenger;
@@ -27,17 +28,11 @@ exports.bookingButton = catchAsync(async (req, res, next) => {
   const trip = await Trip.findById(tripId);
 
   if (!trip) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Trip not found',
-    });
+    return next(new AppError('Trip not found', 404));
   }
   // Check if the trip is already booked
   if (trip.rideBooked) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Trip is already booked',
-    });
+    return next(new AppError('Trip is already booked', 400));
   }
   // Update the trip document
   trip.rideBooked = true;
@@ -58,27 +53,18 @@ exports.cancelTrip = catchAsync(async (req, res, next) => {
   const tripId = req.body._id;
   // Check if the tripId is a valid ObjectId
   if (!mongoose.Types.ObjectId.isValid(tripId)) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Invalid trip ID',
-    });
+    return next(new AppError('Invalid trip ID', 400));
   }
   // Find the trip document by ID
   const trip = await Trip.findById(tripId);
 
   if (!trip) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Trip not found or already cancelled',
-    });
+    return next(new AppError('Trip not found or already cancelled', 404));
   }
 
   // Check if the trip is NOT already booked
   if (!trip.rideBooked) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Trip is not booked, you cant cancel',
-    });
+    return next(new AppError('Trip is not booked, you cant cancel', 400));
   }
 
   // Update the trip document to reflect the cancellation
@@ -99,6 +85,21 @@ exports.cancelTrip = catchAsync(async (req, res, next) => {
 
 exports.searchAllTrips = catchAsync(async (req, res, next) => {
   const { origin, destination, deptDate } = req.query;
+  // Check for required query parameters and validate the date format
+  if (
+    !origin ||
+    !destination ||
+    !deptDate ||
+    Number.isNaN(Date.parse(deptDate))
+  ) {
+    return next(
+      new AppError(
+        'Please specify valid origin, destination, and departure date.',
+        400,
+      ),
+    );
+  }
+
   const deptDateObject = new Date(deptDate);
 
   // Perform a database query to find trips matching the criteria
@@ -113,10 +114,9 @@ exports.searchAllTrips = catchAsync(async (req, res, next) => {
 
   // If no trips are found, return an error response
   if (trips.length === 0) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'No trips found with the specified criteria',
-    });
+    return next(
+      new AppError('No trips found with those specified criteria', 404),
+    );
   }
 
   res.status(200).json({
@@ -162,6 +162,10 @@ exports.updateTrip = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
+  if (!trip) {
+    return next(new AppError('No trip found with that ID', 404));
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -170,8 +174,12 @@ exports.updateTrip = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteTrip = catchAsync(async (req, res) => {
-  await Trip.findByIdAndDelete(req.params.id);
+exports.deleteTrip = catchAsync(async (req, res, next) => {
+  const trip = await Trip.findByIdAndDelete(req.params.id);
+
+  if (!trip) {
+    return next(new AppError('No trip found with that ID', 404));
+  }
 
   res.status(204).json({
     status: 'success',
@@ -180,15 +188,11 @@ exports.deleteTrip = catchAsync(async (req, res) => {
 });
 
 exports.getTrip = catchAsync(async (req, res, next) => {
-  const trip = await Trip.findById(req.params.id)
-    .populate({
-      path: 'driver',
-      select: ['firstName', 'lastName', 'profileImage', 'ratingsAverage'],
-    })
-    .populate({
-      path: 'passenger',
-      select: ['firstName', 'lastName', 'profileImage', 'ratingsAverage'],
-    });
+  const trip = await Trip.findById(req.params.id);
+
+  if (!trip) {
+    return next(new AppError('No trip found with that ID', 404));
+  }
 
   res.status(200).json({
     status: 'success',
