@@ -207,7 +207,15 @@ exports.deleteTrip = catchAsync(async (req, res, next) => {
 });
 
 exports.getTrip = catchAsync(async (req, res, next) => {
-  const trip = await Trip.findById(req.params.id);
+  const trip = await Trip.findById(req.params.id)
+    .populate({
+      path: 'driver',
+      select: ['firstName', 'lastName', 'profileImage', 'ratingsAverage'],
+    })
+    .populate({
+      path: 'passenger',
+      select: ['firstName', 'lastName', 'profileImage', 'ratingsAverage'],
+    });
 
   if (!trip) {
     return next(new AppError('No trip found with that ID', 404));
