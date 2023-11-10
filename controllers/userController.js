@@ -1,9 +1,10 @@
+const mongoose = require('mongoose');
 const User = require('../models/userModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 
-exports.getAllUsers = catchAsync(async (req, res) => {
+exports.getAllUsers = catchAsync(async (req, res, next) => {
   const features = new APIFeatures(User.find(), req.query)
     .filter()
     .sort()
@@ -20,116 +21,80 @@ exports.getAllUsers = catchAsync(async (req, res) => {
   });
 });
 
-exports.getUserByEmail = async (req, res) => {
-  try {
-    // Get the email from the query
-    console.log(req);
-    const { email } = req.query;
+exports.getUserByEmail = catchAsync(async (req, res, next) => {
+  // Get the email from the query
+  const { email } = req.query;
 
-    // Validate the email
-    if (!email) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Email is required',
-      });
-    }
-
-    // Find the user by email
-    const user = await User.findOne({ email: email });
-
-    // Check if a user with the provided email exists
-    if (!user) {
-      return res.status(404).json({
-        status: 'fail',
-        message: 'No user found with that email',
-      });
-    }
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        user,
-        // userId: user._id,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: 'error',
-      message: err.message,
-    });
+  // Validate the email/email is provided
+  if (!email) {
+    return next(new AppError('Email is required', 400));
   }
-};
 
-exports.getUser = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
+  // Find the user by email
+  const user = await User.findOne({ email: email });
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
+  // Check if a user with the provided email exists
+  if (!user) {
+    return next(new AppError('No user found with that email', 404));
   }
-};
 
-exports.createUser = async (req, res) => {
-  try {
-    const newUser = await User.create(req.body);
-    //console.log('In the create user');
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        user: newUser,
-      },
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err,
-    });
+exports.getUser = catchAsync(async (req, res, next) => {
+  const userId = req.params.id;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return next(new AppError('Invalid user ID', 400));
   }
-};
+  const user = await User.findById(req.params.id);
 
-exports.updateUser = async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    res.status(200).json({
-      status: 'success',
-      data: {
-        user,
-      },
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
+  if (!user) {
+    return next(new AppError('No user found with that ID', 404));
   }
-};
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
 
-exports.deleteUser = async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
+exports.createUser = catchAsync(async (req, res, next) => {
+  const newUser = await User.create(req.body);
 
-    res.status(204).json({
-      status: 'success',
-      data: null,
-    });
-  } catch (err) {
-    res.status(404).json({
-      status: 'fail',
-      message: err,
-    });
-  }
-};
+  res.status(201).json({
+    status: 'success',
+    data: {
+      user: newUser,
+    },
+  });
+});
+
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
+
+exports.deleteUser = catchAsync(async (req, res) => {
+  await User.findByIdAndDelete(req.params.id);
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
+  });
+});
