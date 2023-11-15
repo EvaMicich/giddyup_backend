@@ -82,8 +82,9 @@ const userSchema = new mongoose.Schema({
   },
   preferences: {
     type: String,
-    enum: ['music', 'pets', 'talking', 'dancing', 'seahorses'],
-    default: 'music',
+    // enum: ['music', 'pets', 'talking', 'dancing', 'seahorses'],
+    default: 'none',
+    maxlength: [40, 'Preferences make must be less than or equal to 40 chars'],
   },
   car: {
     make: {
