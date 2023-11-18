@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
+  title: {
+    type: String,
+  },
   firstName: {
     type: String,
     //required: [true, 'User must have a first name'],
@@ -164,17 +167,6 @@ const userSchema = new mongoose.Schema({
     },
   },
 });
-
-// {
-//   toJSON: { virtuals: true }, // Enable virtuals to be included in JSON output
-//   toObject: { virtuals: true }, // Enable virtuals to be included in object output
-// },
-
-// // Define the virtual field for fullName
-// userSchema.virtual('fullName').get(function() {
-//   // eslint-disable-next-line
-//   return this.firstName + ' ' + this.lastName;
-// }); //prettier-ignore
 
 const User = mongoose.model('User', userSchema);
 
