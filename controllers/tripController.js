@@ -128,7 +128,7 @@ exports.searchAllTrips = catchAsync(async (req, res, next) => {
         'phoneNumber',
       ],
     })
-    .sort({ deptDateTime: -1 })
+    .sort({ deptDateTime: 1 })
     .limit(5);
 
   // If no trips are found, return an error response
